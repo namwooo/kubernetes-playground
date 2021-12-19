@@ -1,0 +1,12 @@
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+- role: control-plane
+  extraPortMappings:
+  # To use port mappings with NodePort. Docker for macOS does not provide routable IPs for containers from the host, and Kind aren't binding every port to localhost. 
+  - containerPort: 30950
+    hostPort: 80
+containerdConfigPatches:
+- |-
+  [plugins."io.containerd.grpc.v1.cri".registry.mirrors."localhost:${reg_port}"]
+    endpoint = ["http://${reg_name}:5000"]
